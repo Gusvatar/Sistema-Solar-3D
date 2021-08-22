@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="matrix.js"></script>
+    <script src="vector.js"></script>
+    <script src="linalg.js"></script>
+    <script src="transformation.js"></script>
+    <script src="js/p5.js"></script>
+    <script src="js/p5.easycam.js"></script>
+    <script src="js/shapes2D.js"></script>
+    <script src="js/shapes3D.js"></script>
+    <script src="js/main.js"></script>
+    <input type = "file" name="file" id = "file">
+    
+    <script type="text/javascript">
+        var contador = 1
+
+        document.getElementById('file').onchange = function() {
+
+            let file = this.files[0];
+
+            let leitor;
+            leitor = new FileReader();
+            leitor.onload = function(progressEvent) {
+            
+            let ls;
+            ls = this.result.split(/\r\n|\n/)
+            
+            for (let i = 0 ; i <= 4;i += 1) {
+                let s;
+                s = window.performance.now()
+                
+                for (let i = 0;i < ls.length - 1;i += 1) {
+                    let l;
+                    l = ls[i]
+                    
+                    if (!l.startsWith("%")) {
+                        if (contador == 1) {
+                            let espaco;
+                            espaco = l.split(" ")
+                            
+                            var matrix = new Matrix(Number(espaco[0]),Number(espaco[1]))
+                            contador += 1
+                        } else {
+                            let espaco;
+                            espaco = l.split(" ")
+                            matrix.set(Number(espaco[0]),Number(espaco[1]),Number(espaco[2]))
+                        }
+
+                        if (i == ls.length-2) {
+                            let la;
+                            la = new LinearAlgebra()
+
+                            let end;
+                            end = window.performance.now()
+
+                            console.log(la.solve(matrix))
+                            console.log(`Execution time: ${end - s} ms`)
+                        }
+                    }
+                }
+            }
+        }
+
+            leitor.readAsText(file);
+        }
+    </script>
+</body>
+</html>
